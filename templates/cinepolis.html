@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Cinepolis</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body class="container">
+    <h1 class="text-center p-4">Cinepolis</h1>
+
+    <form action="/cinepolis" method="post">
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="formC">
+                    <h2>Entradas</h2>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre">
+                    <label for="cantCompradores">Cantidad de compradores:</label>
+                    <input type="number" class="form-control" name="cantCompradores" id="cantCompradores">
+                    <label>Tarjeta de Cineco:</label><br>
+                    <input class="mx-2" type="radio" id="si" name="tarjCineco" value="si">
+                    <label for="si">Sí</label>
+                    <input class="mx-2" type="radio" id="no" name="tarjCineco" value="no">
+                    <label for="no">No</label><br>
+                    <label for="cantBoletas">Cantidad de boletas:</label>
+                    <input type="number" class="form-control" name="cantBoletas" id="cantBoletas">
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="formCValorPagar">
+                    <h2 class="salidas">Salidas</h2>
+                    <label for="total"> {{nombre}}, debe pagar:</label>
+                    <h5 class="text-white mx-5 mt-4">{{ mensaje }}</h5>
+                    <h3 class="text-white mx-5 mt-4">Total: {{ total }}</h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="contBtn row mx-1 mt-5 justify-content-center text-center align-items-center">
+            <div class="col-12 text-center">
+                <input class="btn btn-success btn-lg my-3" type="submit" name="procesar" id="btnProcesar"
+                    value="Procesar">
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
