@@ -1,19 +1,80 @@
 # importa flask
 # request es para obtener los datos de un formulario envio y obtencion de parametros
 from flask import Flask, render_template, request
+# importa g para poder utilizar las variables globales
+from flask import g
+# importa flash para poder mostrar mensajes en la aplicacion
+from flask import flash
+#proteje contra ataques tipo csrf
+from flask_wtf.csrf import CSRFProtect
+# importa forms para poder utilisar los formularios del otro archivo
+import forms
 
 ## crea el objeto de la aplicación
 # app corre ejecuta toda la aplicacion
 app=Flask(__name__, template_folder='templates')
+app.secret_key="Esta es la llave secreta"
+csrf = CSRFProtect()
+
+# esta funcion se ejecuta cuando se produce un error 404 que no encuentra el recurso o la pagina
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+# esta fucnion o decorador se ejecuta antes de que se ejecute la aplicacion
+@app.before_request
+def before_request():
+    g.nombre="mario"
+    print("before request 1")
+    
+    
+# esta funcion o decorador se ejecuta antes de que se ejecute la aplicacion
+@app.after_request
+def after_request(response):
+    print("After request 3")  
+    return response
+
+
 
 # crea una ruta o decorador
 @app.route('/')
 def index():
     grupo="IDGS803"
-    
+
     lista=["Juan", "Pedro", "mario"]
+    print("Index 2")
+    print("Hola {}".format(g.nombre))
     # redner_template() reanderiza y obtienen el archivo del html
     return render_template('index.html', grupo = grupo, lista= lista)
+
+
+
+@app.route('/Alumnos', methods=["GET","POST"])
+def alumnos():
+    mat=""
+    nom=""
+    edad=""
+    correo=""
+    ape=""
+    # crea una instancia/objeto de la clase UserForm, y obtien elos valores
+    alumno_clase=forms.UserForm(request.form)
+    # revisa si todas las validaciones son correctas o validad del formulario
+    if request.method == "POST" and alumno_clase.validate():
+        # obtiene los datos del formulario con las variables de la clase
+        mat=alumno_clase.matricula.data
+        nom=alumno_clase.nombre.data
+        ape=alumno_clase.apellidos.data
+        edad=alumno_clase.edad.data
+        correo=alumno_clase.correo.data
+        # crea un mensaje con el nombre del alumno
+        mensaje='Bienvenido {}'.format(nom)
+        # muestra el mensaje en la aplicacion
+        flash(mensaje)
+    return render_template("Alumnos.html", form=alumno_clase, mat=mat, nom=nom, ape=ape, edad=edad, correo=correo)
+    
+    
+
 
 @app.route('/operasBas', methods=['POST', 'GET'])
 def operaBasicas():
@@ -97,6 +158,8 @@ def form1():
 
 ## ejecuta la aplicacion
 if __name__ == '__main__':
+    # pasa los parametros que definimos de la clave secreta
+    csrf.init_app(app)
     # app.run() corre la aplicacion y debug=True para que se actualice automaticamente solo con recargar la pagina en el navegador
     # port = (numero) indica el cuarpo en el que se vaa ejecutar la aplicacion/servidor
     app.run(debug=True, port=3000)
